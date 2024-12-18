@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Judo Terms Flashcards</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #f0f0f0;
+    text-align: center;
+    user-select: none;
+  }
+
+  h1, h2 {
+    margin: 10px 0;
+  }
+
+  #scoreboard {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  #term-jp {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-top: 60px;
+  }
+
+  #term-en {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: green;
+    margin: 20px auto;
+  }
+
+  #description {
+    font-size: 1.3em;
+    margin: 10px auto;
+    max-width: 600px;
+  }
+
+  #image-container {
+    margin: 20px auto;
+    max-width: 400px;
+  }
+
+  #image-container img {
+    width: 100%;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+  }
+
+  #buttons-container {
+    margin-top: 40px;
+  }
+
+  button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1em;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 0 10px;
+    outline: none;
+  }
+
+  button:hover {
+    background: #0056b3;
+  }
+
+  #belt-selection {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+  }
+
+  #belt-selection label {
+    margin: 0 10px;
+    cursor: pointer;
+  }
+
+  #belt-selection input[type="checkbox"] {
+    margin-right: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Judo Terms Practice</h1>
+
+<div id="belt-selection">
+  <label><input type="checkbox" id="yellow-belt" value="yellow"> Yellow Belt</label>
+  <label><input type="checkbox" id="red-belt" value="red"> Red Belt</label>
+</div>
+
+<div id="scoreboard">Score: <span id="score-percent">0%</span></div>
+<h2 id="term-jp">Press ENTER or Click to Begin</h2>
+<p id="term-en"></p>
+<p id="description"></p>
+<div id="image-container"></div>
+
+<div id="buttons-container">
+  <button id="correct-btn" style="display:none;">Correct</button>
+  <button id="incorrect-btn" style="display:none;">Incorrect</button>
+</div>
+
+<script>
+// Updated const terms based on the new data set, preserving original JP formatting where similar:
+const terms = [
+  // Yellow belt terms (includes both yellow and red if yellow selected)
+  { jp: "Kumi-kata", en: "Engagement Position", desc: "Standard gripping position used in judo.", belt: "yellow" },
+  { jp: "Tai Otoshi", en: "Body Drop Throw", desc: "A throwing technique where the attacker pivots to drop the opponent.", belt: "yellow" },
+  { jp: "Yoko Shiho Gatame", en: "Side Four Quarters Hold", desc: "A pinning technique involving control from the side.", belt: "yellow" },
+  { jp: "Ippon Seoi Nage", en: "One Arm Shoulder Throw", desc: "A throw where the attacker lifts the opponent over their shoulder.", belt: "yellow" },
+  { jp: "Kami Shiho Gatame", en: "Upper Four Quarters Hold", desc: "A pin from the top of the opponent.", belt: "yellow" },
+  { jp: "Mae Ukemi", en: "Front Breakfall", desc: "A technique to safely fall forward.", belt: "yellow" },
+  { jp: "Ouchi Gari", en: "Major Inner Reaping Throw", desc: "A sweeping throw targeting the opponent's inner leg.", belt: "yellow" },
+  { jp: "Tate Shiho Gatame", en: "Lengthwise Four Quarters Hold", desc: "A pinning technique applied lengthwise.", belt: "yellow" },
+
+  // Red belt terms
+  { jp: "Judogi", en: "Judo Uniform", desc: "The standard attire worn for judo practice.", belt: "red" },
+  { jp: "Judoka", en: "Judo Player", desc: "A practitioner of judo.", belt: "red" },
+  { jp: "Hajime", en: "Begin", desc: "Referee's command to start a contest.", belt: "red" },
+  { jp: "Kesa Gatame", en: "Scarf Hold", desc: "A pinning technique involving control around the opponent's head and arm.", belt: "red" },
+  { jp: "Mate", en: "Wait", desc: "Referee's command to pause the contest.", belt: "red" },
+  { jp: "De Ashi Barai", en: "Advanced Foot Sweep", desc: "A sweeping technique targeting the opponent's foot.", belt: "red" },
+  { jp: "Mune Gatame", en: "Chest Hold", desc: "A pinning technique involving control over the opponent's chest.", belt: "red" },
+  { jp: "Uki Goshi", en: "Floating Hip Throw", desc: "A hip throw where the opponent is lifted and turned.", belt: "red" },
+  { jp: "Kuzure Kesa Gatame", en: "Modified Scarf Hold", desc: "A variation of the scarf hold pinning technique.", belt: "red" },
+  { jp: "Osoto Otoshi", en: "Major Outer Drop Throw", desc: "A throw where the attacker drops the opponent backward.", belt: "red" },
+  { jp: "Zenpo Kaiten Ukemi", en: "Forward Rolling Breakfall", desc: "A technique to safely roll forward during a fall.", belt: "red" },
+  { jp: "Toketa", en: "Hold Broken", desc: "Referee's announcement when a hold is no longer effective.", belt: "red" },
+  { jp: "Randori", en: "Free Practice", desc: "Judo sparring to practice techniques in a controlled environment.", belt: "red" },
+  { jp: "Ushiro Ukemi", en: "Rear Breakfall", desc: "A technique to safely fall backward.", belt: "red" },
+  { jp: "Dojo", en: "Judo Practice Hall", desc: "The training hall for judo practice.", belt: "red" },
+  { jp: "Zori", en: "Judo Footwear", desc: "Footwear worn in and around the dojo.", belt: "red" }
+];
+
+// Convert Japanese names to image filenames: replace spaces with underscores, then add ".jpg"
+for (let i = 0; i < terms.length; i++) {
+  terms[i].img = terms[i].jp.replace(/\s+/g, '_') + '.jpg';
+}
+
+let showingAnswer = false;
+let currentTerm = null;
+let correctCount = 0;
+let totalCount = 0;
+
+function updateScoreboard() {
+  const percent = totalCount === 0 ? 0 : Math.round((correctCount / totalCount) * 100);
+  document.getElementById('score-percent').textContent = percent + "%";
+}
+
+// Function to determine which terms are allowed based on belt selection
+function getFilteredTerms() {
+  const yellowSelected = document.getElementById('yellow-belt').checked;
+  const redSelected = document.getElementById('red-belt').checked;
+
+  // If red is selected, only red terms
+  if (redSelected) {
+    return terms.filter(t => t.belt === 'red');
+  }
+
+  // If yellow is selected, yellow + red terms
+  if (yellowSelected) {
+    return terms.filter(t => t.belt === 'yellow' || t.belt === 'red');
+  }
+
+  // If none selected, return all terms
+  return terms;
+}
+
+function getRandomTerm() {
+  const filteredTerms = getFilteredTerms();
+  return filteredTerms[Math.floor(Math.random() * filteredTerms.length)];
+}
+
+function showJapaneseTerm() {
+  currentTerm = getRandomTerm();
+  if (!currentTerm) {
+    // In case filtering removes all terms (shouldn't happen if data is correct)
+    document.getElementById('term-jp').textContent = "No terms available for this selection";
+    return;
+  }
+  document.getElementById('term-jp').textContent = currentTerm.jp;
+  document.getElementById('term-en').textContent = "";
+  document.getElementById('description').textContent = "";
+  document.getElementById('image-container').innerHTML = "";
+  document.getElementById('correct-btn').style.display = "none";
+  document.getElementById('incorrect-btn').style.display = "none";
+  showingAnswer = false;
+}
+
+function showAnswer() {
+  if (!currentTerm) return;
+  document.getElementById('term-en').textContent = currentTerm.en;
+  document.getElementById('description').textContent = currentTerm.desc;
+  document.getElementById('image-container').innerHTML = `<img src="${currentTerm.img}" alt="${currentTerm.en}" />`;
+  document.getElementById('correct-btn').style.display = "inline-block";
+  document.getElementById('incorrect-btn').style.display = "inline-block";
+  showingAnswer = true;
+}
+
+// Add logic to ensure only one checkbox can be selected at a time
+document.getElementById('yellow-belt').addEventListener('change', function() {
+  if (this.checked) {
+    document.getElementById('red-belt').checked = false;
+  }
+  showJapaneseTerm();
+});
+
+document.getElementById('red-belt').addEventListener('change', function() {
+  if (this.checked) {
+    document.getElementById('yellow-belt').checked = false;
+  }
+  showJapaneseTerm();
+});
+
+// Show answer on ENTER key
+document.addEventListener('keydown', function(e) {
+  if (e.key === "Enter") {
+    if (!showingAnswer) {
+      showAnswer();
+    }
+  }
+});
+
+// Show answer on click anywhere if answer not shown
+document.addEventListener('click', function(e) {
+  const clickedElement = e.target;
+  if (!showingAnswer && clickedElement.id !== 'correct-btn' && clickedElement.id !== 'incorrect-btn') {
+    showAnswer();
+  }
+});
+
+document.getElementById('correct-btn')?.addEventListener('click', function() {
+  correctCount++;
+  totalCount++;
+  updateScoreboard();
+  showJapaneseTerm();
+});
+
+document.getElementById('incorrect-btn')?.addEventListener('click', function() {
+  totalCount++;
+  updateScoreboard();
+  showJapaneseTerm();
+});
+
+// Initial load
+showJapaneseTerm();
+updateScoreboard();
+</script>
+
+</body>
+</html>
