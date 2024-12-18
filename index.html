@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Judo Terms Flashcards </title>
+<title>Judo Terms Flashcards</title>
 
 <style>
   body {
@@ -95,8 +95,8 @@
 <h1>Judo Terms Practice</h1>
 
 <div id="belt-selection">
-  <label style="background-color: yellow; padding: 5px;"><input type="checkbox" id="yellow-belt" value="yellow"> Yellow Belt</label>
-  <label style="background-color: lightcoral; padding: 5px;"><input type="checkbox" id="red-belt" value="red"> Red Belt</label>
+  <label><input type="checkbox" id="yellow-belt" value="yellow"> Yellow Belt</label>
+  <label><input type="checkbox" id="red-belt" value="red"> Red Belt</label>
 </div>
 
 <div id="scoreboard">Score: <span id="score-percent">0%</span></div>
@@ -111,9 +111,9 @@
 </div>
 
 <script>
-// Updated const terms based on the new data set, preserving original JP formatting where similar:
+// Updated terms list with belt levels
 const terms = [
-  // Yellow belt terms (includes both yellow and red if yellow selected)
+  // Yellow belt terms
   { jp: "Kumi-kata", en: "Engagement Position", desc: "Standard gripping position used in judo.", belt: "yellow" },
   { jp: "Tai Otoshi", en: "Body Drop Throw", desc: "A throwing technique where the attacker pivots to drop the opponent.", belt: "yellow" },
   { jp: "Yoko Shiho Gatame", en: "Side Four Quarters Hold", desc: "A pinning technique involving control from the side.", belt: "yellow" },
@@ -142,7 +142,7 @@ const terms = [
   { jp: "Zori", en: "Judo Footwear", desc: "Footwear worn in and around the dojo.", belt: "red" }
 ];
 
-// Convert Japanese names to image filenames: replace spaces with underscores, then add ".jpg"
+// Convert Japanese names to image filenames
 for (let i = 0; i < terms.length; i++) {
   terms[i].img = terms[i].jp.replace(/\s+/g, '_') + '.jpg';
 }
@@ -152,22 +152,23 @@ let currentTerm = null;
 let correctCount = 0;
 let totalCount = 0;
 
+// Keep track of the last 4 displayed terms to avoid repeats
+const recentTerms = [];
+
 function updateScoreboard() {
   const percent = totalCount === 0 ? 0 : Math.round((correctCount / totalCount) * 100);
   document.getElementById('score-percent').textContent = percent + "%";
 }
 
-// Function to determine which terms are allowed based on belt selection
+// Determine which terms are allowed based on belt selection
 function getFilteredTerms() {
   const yellowSelected = document.getElementById('yellow-belt').checked;
   const redSelected = document.getElementById('red-belt').checked;
 
-  // If red is selected, only red terms
   if (redSelected) {
     return terms.filter(t => t.belt === 'red');
   }
 
-  // If yellow is selected, yellow + red terms
   if (yellowSelected) {
     return terms.filter(t => t.belt === 'yellow' || t.belt === 'red');
   }
@@ -178,13 +179,38 @@ function getFilteredTerms() {
 
 function getRandomTerm() {
   const filteredTerms = getFilteredTerms();
-  return filteredTerms[Math.floor(Math.random() * filteredTerms.length)];
+  if (filteredTerms.length === 0) return null;
+
+  // Attempt to pick a term not in recentTerms
+  let chosenTerm = null;
+  let attempts = 0;
+
+  while (attempts < 50) { // 50 attempts to avoid infinite loop
+    const candidate = filteredTerms[Math.floor(Math.random() * filteredTerms.length)];
+    if (!recentTerms.includes(candidate.jp) || filteredTerms.length <= 4) {
+      chosenTerm = candidate;
+      break;
+    }
+    attempts++;
+  }
+
+  // If after many attempts we don't find a new one, just pick any
+  if (!chosenTerm) {
+    chosenTerm = filteredTerms[Math.floor(Math.random() * filteredTerms.length)];
+  }
+
+  // Update recent terms memory
+  recentTerms.push(chosenTerm.jp);
+  if (recentTerms.length > 4) {
+    recentTerms.shift(); // remove oldest entry
+  }
+
+  return chosenTerm;
 }
 
 function showJapaneseTerm() {
   currentTerm = getRandomTerm();
   if (!currentTerm) {
-    // In case filtering removes all terms (shouldn't happen if data is correct)
     document.getElementById('term-jp').textContent = "No terms available for this selection";
     return;
   }
@@ -207,7 +233,7 @@ function showAnswer() {
   showingAnswer = true;
 }
 
-// Add logic to ensure only one checkbox can be selected at a time
+// Only one checkbox can be selected at a time
 document.getElementById('yellow-belt').addEventListener('change', function() {
   if (this.checked) {
     document.getElementById('red-belt').checked = false;
