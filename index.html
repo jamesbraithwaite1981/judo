@@ -1,287 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Judo Terms Flashcards</title>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #0a1f53, #1e73be, #6dc1e4, #d3c98b, #f5a623);
+      background-attachment: fixed; /* keeps the background fixed on scroll */
+      height: 100vh;
+      margin: 0;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
 
-<title>Judo Terms Flashcards</title>
+    /* Items-left panel (top-left corner) */
+    #items-left-panel {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      text-align: center;
+    }
+    .items-left-box {
+      margin-bottom: 5px;
+    }
 
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background: #f0f0f0;
-    text-align: center;
-    user-select: none;
-  }
+    /* Score panel (top-right corner) */
+    #score-panel {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      text-align: center;
+    }
+    .score-box {
+      margin-bottom: 5px;
+    }
 
-  h1, h2 {
-    margin: 10px 0;
-  }
+    /* 3D-like stylised text for the numeric displays */
+    #items-left-display,
+    #score-display {
+      font-size: 2.2em;
+      font-weight: bold;
+      color: #FFD700; /* bright gold/yellow main text color */
+      /*
+        Multi-layer pink outline
+        You can adjust offsets & colours to tweak the effect
+      */
+      text-shadow:
+        -2px -2px 0 #0a1f53,
+         2px -2px 0 #0a1f53,
+        -2px  2px 0 #0a1f53,
+         2px  2px 0 #0a1f53;
+    }
 
-  #scoreboard {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
+    .score-label {
+      font-size: 0.8em;
+      color: white;
+    }
 
-  #term-jp {
-    font-size: 2.5em;
-    font-weight: bold;
-    margin-top: 60px;
-  }
+    /* Font size for Judo Terms Practice heading */
+    h1 {
+      font-size: 1.2em; /* smaller heading */
+      margin: 10px 0;
+    }
 
-  #term-en {
-    font-size: 2.5em;
-    font-weight: bold;
-    color: green;
-    margin: 20px auto;
-  }
+    h2 {
+      margin: 10px 0;
+    }
 
-  #description {
-    font-size: 1.3em;
-    margin: 10px auto;
-    max-width: 600px;
-  }
+    /* Belt selection dropdown styling */
+    #belt-selection {
+      margin-bottom: 5px; /* reduced space below the dropdown */
+      font-size: 1.2em;
+    }
+    #belt-selection select {
+      font-size: 1em;
+      padding: 5px 10px;
+      border-radius: 8px;
+      background-color: #add8e6; /* light blue background */
+      border: none;
+      cursor: pointer;
+    }
 
-  #image-container {
-    margin: 20px auto;
-    max-width: 400px;
-  }
+    /* Reduced top margin for Japanese term */
+    #term-jp {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin-top: 10px; /* reduced from 30px */
+    }
 
-  #image-container img {
-    width: 100%;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-  }
+    /* Hint line below the Japanese term */
+    #hint {
+      font-size: 1em;
+      color: white;
+      margin: 5px 0; /* added slight margin for spacing */
+    }
 
-  #buttons-container {
-    margin-top: 40px;
-  }
+    /* Adjusted English answer style */
+    #term-en {
+      font-size: 2em; /* reduced font size */
+      font-weight: bold;
+      color: black;
+      margin: 10px auto; /* reduced margin to reduce space between hint and English answer */
+    }
 
-  button {
-    background: #007bff;
-    color: #fff;
-    border: none;
-    padding: 15px 30px;
-    font-size: 1em;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 0 10px;
-    outline: none;
-  }
+    /* Adjusted description spacing */
+    #description {
+      font-size: 1.3em;
+      margin: 5px auto; /* reduced margin */
+      max-width: 600px;
+    }
 
-  button:hover {
-    background: #0056b3;
-  }
+    #image-container {
+      margin: 20px auto;
+      max-width: 400px;
+    }
+    /* Keep aspect ratio; limit height to 30vh */
+    #image-container img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 30vh;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      object-fit: contain;
+    }
 
-  #belt-selection {
-    margin-bottom: 20px;
-    font-size: 1.2em;
-  }
+    #buttons-container {
+      margin-top: 20px; /* reduced from 40px */
+    }
 
-  #belt-selection label {
-    margin: 0 10px;
-    cursor: pointer;
-  }
+    button {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1em;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 0 10px;
+      outline: none;
+    }
 
-  #belt-selection input[type="checkbox"] {
-    margin-right: 5px;
-  }
-</style>
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Judo Terms Practice</h1>
+  <!-- Top-left: Items left -->
+  <div id="items-left-panel">
+    <div class="items-left-box">
+      <div id="items-left-display">0</div>
+      <div class="score-label">Items left</div>
+    </div>
+  </div>
 
-<div id="belt-selection">
-  <label><input type="checkbox" id="yellow-belt" value="yellow"> Yellow Belt</label>
-  <label><input type="checkbox" id="red-belt" value="red"> Red Belt</label>
-</div>
+  <!-- Top-right: Score -->
+  <div id="score-panel">
+    <div class="score-box">
+      <div id="score-display">0/0</div>
+      <div class="score-label">Score</div>
+    </div>
+  </div>
 
-<div id="scoreboard">Score: <span id="score-percent">0%</span></div>
-<h2 id="term-jp">Press ENTER or Click to Begin</h2>
-<p id="term-en"></p>
-<p id="description"></p>
-<div id="image-container"></div>
+  <h1>Judo Terms Practice</h1>
 
-<div id="buttons-container">
-  <button id="correct-btn" style="display:none;">Correct</button>
-  <button id="incorrect-btn" style="display:none;">Incorrect</button>
-</div>
+  <!-- Belt selection dropdown -->
+  <div id="belt-selection">
+    <select id="belt-dropdown">
+      <option value="all">All Belts</option>
+      <option value="red">Red Belt</option>
+      <option value="yellow">Yellow Belt</option>
+      <option value="orange">Orange Belt</option>
+      <option value="green">Green Belt</option>
+      <option value="blue">Blue Belt</option>
+      <option value="brown">Brown Belt</option>
+    </select>
+  </div>
 
-<script>
-// Updated terms list with belt levels
-const terms = [
-  // Yellow belt terms
-  { jp: "Kumi-kata", en: "Engagement Position", desc: "Standard gripping position used in judo.", belt: "yellow" },
-  { jp: "Tai Otoshi", en: "Body Drop Throw", desc: "A throwing technique where the attacker pivots to drop the opponent.", belt: "yellow" },
-  { jp: "Yoko Shiho Gatame", en: "Side Four Quarters Hold", desc: "A pinning technique involving control from the side.", belt: "yellow" },
-  { jp: "Ippon Seoi Nage", en: "One Arm Shoulder Throw", desc: "A throw where the attacker lifts the opponent over their shoulder.", belt: "yellow" },
-  { jp: "Kami Shiho Gatame", en: "Upper Four Quarters Hold", desc: "A pin from the top of the opponent.", belt: "yellow" },
-  { jp: "Mae Ukemi", en: "Front Breakfall", desc: "A technique to safely fall forward.", belt: "yellow" },
-  { jp: "Ouchi Gari", en: "Major Inner Reaping Throw", desc: "A sweeping throw targeting the opponent's inner leg.", belt: "yellow" },
-  { jp: "Tate Shiho Gatame", en: "Lengthwise Four Quarters Hold", desc: "A pinning technique applied lengthwise.", belt: "yellow" },
+  <h2 id="term-jp">Press ENTER or Click to Begin</h2>
+  <!-- Hint line showing the first word of the answer -->
+  <p id="hint"></p>
+  <p id="term-en"></p>
+  <p id="description"></p>
+  <div id="image-container"></div>
 
-  // Red belt terms
-  { jp: "Judogi", en: "Judo Uniform", desc: "The standard attire worn for judo practice.", belt: "red" },
-  { jp: "Judoka", en: "Judo Player", desc: "A practitioner of judo.", belt: "red" },
-  { jp: "Hajime", en: "Begin", desc: "Referee's command to start a contest.", belt: "red" },
-  { jp: "Kesa Gatame", en: "Scarf Hold", desc: "A pinning technique involving control around the opponent's head and arm.", belt: "red" },
-  { jp: "Mate", en: "Wait", desc: "Referee's command to pause the contest.", belt: "red" },
-  { jp: "De Ashi Barai", en: "Advanced Foot Sweep", desc: "A sweeping technique targeting the opponent's foot.", belt: "red" },
-  { jp: "Mune Gatame", en: "Chest Hold", desc: "A pinning technique involving control over the opponent's chest.", belt: "red" },
-  { jp: "Uki Goshi", en: "Floating Hip Throw", desc: "A hip throw where the opponent is lifted and turned.", belt: "red" },
-  { jp: "Kuzure Kesa Gatame", en: "Modified Scarf Hold", desc: "A variation of the scarf hold pinning technique.", belt: "red" },
-  { jp: "Osoto Otoshi", en: "Major Outer Drop Throw", desc: "A throw where the attacker drops the opponent backward.", belt: "red" },
-  { jp: "Zenpo Kaiten Ukemi", en: "Forward Rolling Breakfall", desc: "A technique to safely roll forward during a fall.", belt: "red" },
-  { jp: "Toketa", en: "Hold Broken", desc: "Referee's announcement when a hold is no longer effective.", belt: "red" },
-  { jp: "Randori", en: "Free Practice", desc: "Judo sparring to practice techniques in a controlled environment.", belt: "red" },
-  { jp: "Ushiro Ukemi", en: "Rear Breakfall", desc: "A technique to safely fall backward.", belt: "red" },
-  { jp: "Dojo", en: "Judo Practice Hall", desc: "The training hall for judo practice.", belt: "red" },
-  { jp: "Zori", en: "Judo Footwear", desc: "Footwear worn in and around the dojo.", belt: "red" }
-];
+  <div id="buttons-container">
+    <button id="correct-btn" style="display:none;">Correct</button>
+    <button id="incorrect-btn" style="display:none;">Incorrect</button>
+  </div>
 
-// Convert Japanese names to image filenames
-for (let i = 0; i < terms.length; i++) {
-  terms[i].img = terms[i].jp.replace(/\s+/g, '_') + '.jpg';
-}
+  <script>
+    // Updated terms list with belt levels
+    const terms = [
+      { jp: "Ushiro Ukemi", en: "Rear breakfall", desc: "A breakfall technique that enables the practitioner to safely fall backwards, reducing the risk of injury.", belt: "red" },
+      { jp: "Yoko Ukemi", en: "Side breakfall", desc: "A breakfall technique used to safely fall to the side while dispersing impact.", belt: "red" },
+      { jp: "Mae Mawari Ukemi", en: "Forward rolling breakfall", desc: "A breakfall that incorporates a forward roll to dissipate the force of a fall.", belt: "red" },
+      { jp: "O-soto-otoshi", en: "Major Outer reap", desc: "A throwing technique that reaps the opponent’s leg from the outside to unbalance them.", belt: "red" },
+      { jp: "De-ashi-barai", en: "Advancing Foot Sweep", desc: "A sweeping technique targeting an advancing opponent’s foot to disrupt their balance.", belt: "red" },
+      { jp: "Uki-goshi", en: "Floating Hip Throw", desc: "A throw where the practitioner uses a floating hip movement to off-balance and project the opponent.", belt: "red" },
+      { jp: "Kesa-gatame", en: "Scarf hold", desc: "A pinning technique involving control around the opponent’s head and arm.", belt: "red" },
+      { jp: "Mune-gatame", en: "Chest Hold", desc: "A pinning technique that uses chest pressure to immobilise the opponent.", belt: "red" },
+      { jp: "Kuzure-kesa-gatame", en: "Modified scarf hold", desc: "A variation of the scarf hold that offers improved leverage and control.", belt: "red" },
+      { jp: "tachi-waza", en: "Standing techniques", desc: "A category of techniques performed from a standing position, emphasising balance and movement.", belt: "red" },
+      { jp: "ne-waza", en: "Ground techniques", desc: "A set of techniques executed on the ground, focusing on submissions and holds.", belt: "red" },
+      { jp: "Mae Ukemi", en: "Front breakfall", desc: "A breakfall technique designed to allow a safe landing when falling forwards.", belt: "red" },
+      { jp: "Ippon-seoi-nage", en: "One Arm Shoulder Throw", desc: "A throw where the attacker lifts the opponent with one arm and rotates them over the shoulder.", belt: "yellow" },
+      { jp: "Kami-shiho-gatame", en: "Upper Four Quarters Hold", desc: "A pinning technique executed from the top to control the opponent’s upper body.", belt: "yellow" },
+      { jp: "O-uchi-gari", en: "Major Inner Reaping Throw", desc: "A throw that involves reaping the opponent’s inner leg to disrupt their balance.", belt: "yellow" },
+      { jp: "Tai-otoshi", en: "Body Drop Throw", desc: "A throw where the attacker pivots to drop the opponent using body weight.", belt: "yellow" },
+      { jp: "Tate-shiho-gatame", en: "Lengthwise Four Quarters Hold", desc: "A pinning technique applied lengthwise to restrict the opponent’s movement.", belt: "yellow" },
+      { jp: "Yoko-shiho-gatame", en: "Side Four Quarters Hold", desc: "A pinning technique that controls the opponent from the side.", belt: "yellow" },
+      { jp: "Kosoto-gake", en: "Minor Outer Hook Throw", desc: "A throw where a minor outer hook is used to off-balance and project the opponent.", belt: "orange" },
+      { jp: "Kosoto-gari", en: "Minor Outer Reaping Throw", desc: "A reaping throw that targets the opponent’s outer leg with a minor sweeping motion.", belt: "orange" },
+      { jp: "Kouchi-gari", en: "Minor Inner Reaping Throw", desc: "A throw that reaps the opponent’s inner leg with a subtle, precise movement.", belt: "orange" },
+      { jp: "Morote-seoi-nage", en: "Two-Handed Shoulder Throw", desc: "A throw where both hands are used to lift and project the opponent over the shoulder.", belt: "orange" },
+      { jp: "Ogoshi", en: "Major Hip Throw", desc: "A throw that utilises the hips as a fulcrum to flip the opponent over.", belt: "orange" },
+      { jp: "Osoto-gari", en: "Major Outer Reaping Throw", desc: "A powerful reaping throw targeting the opponent’s outer leg to force a fall.", belt: "orange" },
+      { jp: "Seoi-otoshi", en: "Shoulder Drop Throw", desc: "A throw where the attacker drops the opponent over the shoulder with a swift motion.", belt: "orange" },
+      { jp: "Tsuri-komi-goshi", en: "Drawing Hip Throw", desc: "A throw that draws the opponent in with a pulling hip movement to execute a controlled projection.", belt: "orange" },
+      { jp: "Yoko-shiho-gatame", en: "Side four quarters hold", desc: "A pinning technique that secures control from the side, similar to its yellow belt counterpart.", belt: "orange" },
+      { jp: "Hane-goshi", en: "Spring Hip", desc: "A hip throw that uses a springing motion to project the opponent, capitalising on momentum.", belt: "green" },
+      { jp: "Harai-goshi", en: "Sweeping Hip", desc: "A throw involving a sweeping hip movement to off-balance and throw the opponent.", belt: "green" },
+      { jp: "Hiza-gatame", en: "Armlock applied with the knee", desc: "A ground technique where the knee is used to apply an armlock on the opponent.", belt: "green" },
+      { jp: "Hiza-guruma", en: "Knee Wheel", desc: "A technique that employs a circular knee motion to sweep the opponent off balance.", belt: "green" },
+      { jp: "Juji-gatame", en: "Cross Armlock", desc: "A submission that utilises a cross formation to lock the opponent’s arm.", belt: "green" },
+      { jp: "Kansetsu-waza", en: "Joint Techniques", desc: "A category of techniques targeting the joints to secure submissions.", belt: "green" },
+      { jp: "Morote-eri-seoi-nage", en: "Two-Handed Lapel Shoulder", desc: "A throw where the practitioner uses both hands on the opponent's lapel to execute a shoulder throw.", belt: "green" },
+      { jp: "Okuri-ashi-barai", en: "Foot Sweep", desc: "A technique that sweeps the opponent's foot to disrupt their balance.", belt: "green" },
+      { jp: "Sasae-tsuri-komi-ashi", en: "Propping Drawing Ankle", desc: "A technique where the attacker props and pulls the opponent's ankle to off-balance them.", belt: "green" },
+      { jp: "Uchi-mata", en: "Inner Thigh Throw", desc: "A throw that targets the inner thigh with a sweeping motion to lift and throw the opponent.", belt: "green" },
+      { jp: "Ude-gatame", en: "Straight Armlock", desc: "A submission technique that applies a straight armlock to control the opponent’s arm.", belt: "green" },
+      { jp: "Waki-gatame", en: "Armlock applied with the armpit.", desc: "A control technique that utilises the armpit to lock the opponent’s arm.", belt: "green" },
+      { jp: "Gyaku-juji-jime", en: "Reverse Cross Strangle", desc: "A strangle technique executed in a reverse cross formation to apply neck pressure.", belt: "blue" },
+      { jp: "Kaeshi-waza", en: "Counter Techniques", desc: "Techniques designed to effectively counter or reverse an opponent's attack.", belt: "blue" },
+      { jp: "Kata-te-jime", en: "Strangle with One Hand", desc: "A strangle technique that uses one hand to compress the opponent's neck.", belt: "blue" },
+      { jp: "Kata-juji-jime", en: "Half Cross Handed Strangle", desc: "A variation of the cross strangle that applies half cross pressure to the neck.", belt: "blue" },
+      { jp: "Koshi-jime", en: "Strangle using the hip", desc: "A strangle technique that incorporates the hip to apply additional pressure on the neck.", belt: "blue" },
+      { jp: "Kuzure-kesa-gatame", en: "Broken scarf hold", desc: "A modified version of the scarf hold offering a less rigid control.", belt: "blue" },
+      { jp: "Nami-juji-jime", en: "Normal Cross Strangle", desc: "A standard cross strangle technique that applies even pressure around the neck.", belt: "blue" },
+      { jp: "Okuri-eri-jime", en: "Sliding Collar Strangle", desc: "A strangle technique involving a sliding motion on the opponent's collar to tighten the grip.", belt: "blue" },
+      { jp: "Seoi-otoshi", en: "Shoulder drop", desc: "A technique where the practitioner drops the opponent over the shoulder in a controlled manner.", belt: "blue" },
+      { jp: "Shime-waza", en: "Strangle Techniques", desc: "A category of techniques focused on applying strangles for submission.", belt: "blue" },
+      { jp: "Soto-maki-komi", en: "Outside Winding", desc: "A technique that involves winding the opponent from the outside to unbalance and throw them.", belt: "blue" },
+      { jp: "Tani-otoshi", en: "Valley Drop Throw", desc: "A throw that uses a valley drop movement to bring the opponent to the ground.", belt: "blue" },
+      { jp: "Tomoe-nage", en: "Circle Throw", desc: "A dynamic throw where a circular motion is used to flip the opponent over.", belt: "blue" },
+      { jp: "Ude-garami", en: "Entangled Armlock", desc: "A submission technique involving an entangled armlock to immobilise the opponent.", belt: "blue" },
+      { jp: "Uki-waza", en: "Floating Throw", desc: "A throw that appears light and fluid, using a floating motion to off-balance the opponent.", belt: "blue" },
+      { jp: "Yoko-guruma", en: "Side Wheel Throw", desc: "A throw that utilises a side wheel motion to rotate and project the opponent.", belt: "blue" },
+      { jp: "Yoko-tomoe-nage", en: "Side Circle Throw", desc: "A throw where a circular motion from the side is used to execute a controlled throw.", belt: "blue" },
+      { jp: "Hadaka-jime", en: "Naked Strangle", desc: "A strangle technique performed without relying on the opponent's gi, applying direct pressure.", belt: "brown" },
+      { jp: "Kata-ha-jime", en: "Single Collar Strangle", desc: "A strangle technique that uses a single collar grip to compress the opponent's neck.", belt: "brown" },
+      { jp: "Koshi-guruma", en: "Hip Wheel Throw", desc: "A throw where the attacker employs a wheeling motion of the hip to project the opponent.", belt: "brown" },
+      { jp: "Ko-uchi-gake-maki-komi", en: "Minor Inner Hook Thigh Winding", desc: "A complex technique that combines a minor inner hook with a winding motion to off-balance the opponent.", belt: "brown" },
+      { jp: "San-gaku-gatame", en: "Triangular Hold Down", desc: "A ground control technique that utilises a triangular formation to hold the opponent down.", belt: "brown" },
+      { jp: "San-gaku-jime", en: "Triangular Strangle", desc: "A strangle technique that forms a triangular configuration to apply pressure on the neck.", belt: "brown" },
+      { jp: "San-gaku-osae-gatame", en: "Triangular Strangle and Hold Down", desc: "A combined technique that simultaneously strangles and holds the opponent in a triangular position.", belt: "brown" },
+      { jp: "Sode-tsuri-komi-goshi", en: "Sleeve Lift Pull Hip Throw", desc: "A throw that leverages a sleeve grip to lift and pull the opponent over the hip.", belt: "brown" },
+      { jp: "Sumi-gaeshi", en: "Corner Throw", desc: "A throw executed by turning the opponent into a corner, leveraging balance and momentum.", belt: "brown" },
+      { jp: "Uki-otoshi", en: "Floating Drop", desc: "A throw that uses a light, floating motion to drop the opponent unexpectedly.", belt: "brown" },
+      { jp: "Ura-nage", en: "Rear Throw", desc: "A technique executed from behind the opponent, using body weight to project them.", belt: "brown" },
+      { jp: "Ushiro-goshi", en: "Rear Hip Throw", desc: "A hip throw performed from behind the opponent to bring them down forcefully.", belt: "brown" },
+      { jp: "Yoko-gake", en: "Side Hook Throw", desc: "A throw where the attacker hooks the opponent’s leg from the side to off-balance and throw them.", belt: "brown" }
+    ];
 
-let showingAnswer = false;
-let currentTerm = null;
-let correctCount = 0;
-let totalCount = 0;
-
-// Keep track of the last 4 displayed terms to avoid repeats
-const recentTerms = [];
-
-function updateScoreboard() {
-  const percent = totalCount === 0 ? 0 : Math.round((correctCount / totalCount) * 100);
-  document.getElementById('score-percent').textContent = percent + "%";
-}
-
-// Determine which terms are allowed based on belt selection
-function getFilteredTerms() {
-  const yellowSelected = document.getElementById('yellow-belt').checked;
-  const redSelected = document.getElementById('red-belt').checked;
-
-  if (redSelected) {
-    return terms.filter(t => t.belt === 'red');
-  }
-
-  if (yellowSelected) {
-    return terms.filter(t => t.belt === 'yellow' || t.belt === 'red');
-  }
-
-  // If none selected, return all terms
-  return terms;
-}
-
-function getRandomTerm() {
-  const filteredTerms = getFilteredTerms();
-  if (filteredTerms.length === 0) return null;
-
-  // Attempt to pick a term not in recentTerms
-  let chosenTerm = null;
-  let attempts = 0;
-
-  while (attempts < 50) { // 50 attempts to avoid infinite loop
-    const candidate = filteredTerms[Math.floor(Math.random() * filteredTerms.length)];
-    if (!recentTerms.includes(candidate.jp) || filteredTerms.length <= 4) {
-      chosenTerm = candidate;
-      break;
+    // Convert Japanese names to image filenames
+    for (let i = 0; i < terms.length; i++) {
+      terms[i].img = terms[i].jp.replace(/\s+/g, '_') + '.jpg';
     }
-    attempts++;
-  }
 
-  // If after many attempts we don't find a new one, just pick any
-  if (!chosenTerm) {
-    chosenTerm = filteredTerms[Math.floor(Math.random() * filteredTerms.length)];
-  }
+    let currentTerm = null;
+    let correctCount = 0;
+    let totalCount = 0;
+    let deck = [];
 
-  // Update recent terms memory
-  recentTerms.push(chosenTerm.jp);
-  if (recentTerms.length > 4) {
-    recentTerms.shift(); // remove oldest entry
-  }
-
-  return chosenTerm;
-}
-
-function showJapaneseTerm() {
-  currentTerm = getRandomTerm();
-  if (!currentTerm) {
-    document.getElementById('term-jp').textContent = "No terms available for this selection";
-    return;
-  }
-  document.getElementById('term-jp').textContent = currentTerm.jp;
-  document.getElementById('term-en').textContent = "";
-  document.getElementById('description').textContent = "";
-  document.getElementById('image-container').innerHTML = "";
-  document.getElementById('correct-btn').style.display = "none";
-  document.getElementById('incorrect-btn').style.display = "none";
-  showingAnswer = false;
-}
-
-function showAnswer() {
-  if (!currentTerm) return;
-  document.getElementById('term-en').textContent = currentTerm.en;
-  document.getElementById('description').textContent = currentTerm.desc;
-  document.getElementById('image-container').innerHTML = `<img src="${currentTerm.img}" alt="${currentTerm.en}" />`;
-  document.getElementById('correct-btn').style.display = "inline-block";
-  document.getElementById('incorrect-btn').style.display = "inline-block";
-  showingAnswer = true;
-}
-
-// Only one checkbox can be selected at a time
-document.getElementById('yellow-belt').addEventListener('change', function() {
-  if (this.checked) {
-    document.getElementById('red-belt').checked = false;
-  }
-  showJapaneseTerm();
-});
-
-document.getElementById('red-belt').addEventListener('change', function() {
-  if (this.checked) {
-    document.getElementById('yellow-belt').checked = false;
-  }
-  showJapaneseTerm();
-});
-
-// Show answer on ENTER key
-document.addEventListener('keydown', function(e) {
-  if (e.key === "Enter") {
-    if (!showingAnswer) {
-      showAnswer();
+    // Utility function to shuffle an array
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     }
-  }
-});
 
-// Show answer on click anywhere if answer not shown
-document.addEventListener('click', function(e) {
-  const clickedElement = e.target;
-  if (!showingAnswer && clickedElement.id !== 'correct-btn' && clickedElement.id !== 'incorrect-btn') {
-    showAnswer();
-  }
-});
+    // Reset deck based on dropdown selection and update counters
+    function resetDeck() {
+      const filtered = getFilteredTerms();
+      deck = shuffle(filtered.slice());
+      totalCount = 0;
+      correctCount = 0;
+      updateScoreDisplay();
+      updateItemsLeftDisplay();
+      showJapaneseTerm();
+    }
 
-document.getElementById('correct-btn')?.addEventListener('click', function() {
-  correctCount++;
-  totalCount++;
-  updateScoreboard();
-  showJapaneseTerm();
-});
+    // Get filtered terms based on dropdown selection
+    function getFilteredTerms() {
+      const selected = document.getElementById('belt-dropdown').value;
+      if (selected === "all") {
+        return terms;
+      } else {
+        return terms.filter(t => t.belt === selected);
+      }
+    }
 
-document.getElementById('incorrect-btn')?.addEventListener('click', function() {
-  totalCount++;
-  updateScoreboard();
-  showJapaneseTerm();
-});
+    // Get the next term from the deck
+    function getNextTerm() {
+      if (deck.length === 0) return null;
+      return deck.pop();
+    }
 
-// Initial load
-showJapaneseTerm();
-updateScoreboard();
-</script>
+    function updateScoreDisplay() {
+      document.getElementById('score-display').textContent = correctCount + "/" + totalCount;
+    }
+
+    function updateItemsLeftDisplay() {
+      document.getElementById('items-left-display').textContent = deck.length;
+    }
+
+    function showJapaneseTerm() {
+      currentTerm = getNextTerm();
+      if (!currentTerm) {
+        document.getElementById('term-jp').textContent = "All terms completed!";
+        document.getElementById('hint').textContent = "";
+        document.getElementById('term-en').textContent = "";
+        document.getElementById('description').textContent = "";
+        document.getElementById('image-container').innerHTML = "";
+        document.getElementById('correct-btn').style.display = "none";
+        document.getElementById('incorrect-btn').style.display = "none";
+        return;
+      }
+      document.getElementById('term-jp').textContent = currentTerm.jp;
+
+      // Set hint: "Answer: " + first word of the English answer + "..."
+      if (currentTerm.en) {
+        const firstWord = currentTerm.en.split(" ")[0];
+        document.getElementById('hint').textContent = "Answer: " + firstWord + "...";
+      } else {
+        document.getElementById('hint').textContent = "Answer: ";
+      }
+
+      document.getElementById('term-en').textContent = "";
+      document.getElementById('description').textContent = "";
+      document.getElementById('image-container').innerHTML = "";
+      document.getElementById('correct-btn').style.display = "none";
+      document.getElementById('incorrect-btn').style.display = "none";
+      updateItemsLeftDisplay();
+    }
+
+    function showAnswer() {
+      if (!currentTerm) return;
+      document.getElementById('term-en').textContent = currentTerm.en;
+      document.getElementById('description').textContent = currentTerm.desc;
+      document.getElementById('image-container').innerHTML = `<img src="${currentTerm.img}" alt="${currentTerm.en}" />`;
+      document.getElementById('correct-btn').style.display = "inline-block";
+      document.getElementById('incorrect-btn').style.display = "inline-block";
+    }
+
+    // Event listener for dropdown change
+    document.getElementById('belt-dropdown').addEventListener('change', function() {
+      resetDeck();
+    });
+
+    // Show answer on ENTER key (if not already shown)
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Enter" && document.getElementById('term-en').textContent === "") {
+        showAnswer();
+      }
+    });
+
+    // Show answer on click anywhere if answer not shown
+    document.addEventListener('click', function(e) {
+      const clickedElement = e.target;
+      if (clickedElement.id !== 'correct-btn' && clickedElement.id !== 'incorrect-btn' &&
+          document.getElementById('term-en').textContent === "") {
+        showAnswer();
+      }
+    });
+
+    document.getElementById('correct-btn').addEventListener('click', function() {
+      correctCount++;
+      totalCount++;
+      updateScoreDisplay();
+      showJapaneseTerm();
+    });
+
+    document.getElementById('incorrect-btn').addEventListener('click', function() {
+      totalCount++;
+      updateScoreDisplay();
+      showJapaneseTerm();
+    });
+
+    // Initial deck reset on load
+    resetDeck();
+  </script>
 
 </body>
 </html>
