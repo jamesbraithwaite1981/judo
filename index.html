@@ -272,8 +272,8 @@
 for (let i = 0; i < terms.length; i++) {
   terms[i].img = terms[i].jp
     .replace(/[\s-]+/g, ' ')  // Replace spaces and hyphens with a single space
-    .split(' ')               // Split into an array of words
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalise first letter of each word
+    .split(' ')               // Split into words
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalise first letter
     .join('_')                // Join words with underscores
     + '.jpg';                 // Append ".jpg"
 }
