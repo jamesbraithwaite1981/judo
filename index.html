@@ -269,9 +269,10 @@
     ];
 
     // Convert Japanese names to image filenames
-    for (let i = 0; i < terms.length; i++) {
-      terms[i].img = terms[i].jp.replace(/\s+/g, '_') + '.jpg';
-    }
+for (let i = 0; i < terms.length; i++) {
+  terms[i].img = terms[i].jp.replace(/[\s-]+/g, '_') + '.jpg';
+}
+
 
     let currentTerm = null;
     let correctCount = 0;
