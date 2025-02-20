@@ -402,6 +402,17 @@ terms.forEach(term => {
       showJapaneseTerm();
     });
 
+
+setTimeout(function() {
+  terms.forEach(function(term) {
+    const preloadImg = new Image();
+    preloadImg.src = term.img;
+  });
+}, 2000);
+
+console.log("version 2.1")
+
+
     // Initial deck reset on load
     resetDeck();
   </script>
