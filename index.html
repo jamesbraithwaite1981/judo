@@ -269,14 +269,14 @@
     ];
 
     // Convert Japanese names to image filenames
-for (let i = 0; i < terms.length; i++) {
-  terms[i].img = terms[i].jp
-    .replace(/[\s-]+/g, ' ')  // Replace spaces and hyphens with a single space
-    .split(' ')               // Split into words
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalise first letter & make rest lowercase
-    .join('_')                // Join words with underscores
-    + '.jpg';                 // Append ".jpg"
-}
+terms.forEach(term => {
+  term.img = term.jp
+    .replace(/[\s-]+/g, ' ') // Replace spaces and hyphens with a single space
+    .replace(/\b\w/g, char => char.toUpperCase()) // Capitalise first letter of each word
+    .replace(/\s/g, '_') // Convert spaces to underscores
+    + '.jpg'; // Append ".jpg"
+});
+
 
 
 
